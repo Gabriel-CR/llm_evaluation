@@ -20,8 +20,7 @@ if __name__ == '__main__':
     try:
       print(f"Executando avaliação para o modelo: {name}")
       current_date = time.strftime("%Y-%m-%d-%H-%M-%S")
-      # eval.evaluate_acc(model, name + current_date + ".csv", max_tokens=1, model_name=name)
-      eval.evaluate(model, name + current_date + ".csv", max_tokens=1, model_name=name)
+      eval.evaluate_with_metrics(model, name + current_date + ".csv", max_tokens=1, model_name=name)
       print("Modelo avaliado com sucesso!")
     except Exception as e:
       print(f"Erro ao avaliar o modelo: {name}")

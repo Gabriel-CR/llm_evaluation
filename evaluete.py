@@ -4,6 +4,7 @@ import csv
 import re
 import os 
 import numpy as np
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 from tqdm import tqdm
 from data_processing import DataProcessor
 from metrics import Metrics
@@ -211,3 +212,100 @@ class Evaluete:
 
     df.to_csv(results_file, index=False)
     print(f"Resultados gravados em {results_file}")
+
+    from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+
+  def evaluate_with_metrics(self, model, file_name, model_name, max_tokens=5):
+      """
+      Avalia o modelo e calcula várias métricas, salvando os resultados e interações.
+
+      Args:
+          model: Objeto do modelo LLM.
+          file_name: Nome base do arquivo para salvar os resultados.
+          model_name: Nome do modelo sendo avaliado.
+          max_tokens: Número máximo de tokens permitidos na saída da LLM.
+      """
+      init_date = datetime.datetime.now()
+
+      processor = DataProcessor()
+      dataset = processor.read_data(path=self.dataset)
+      bar = tqdm(enumerate(dataset['train']), total=len(dataset['train']))
+
+      # Armazena respostas verdadeiras e previstas
+      true_answers = []
+      predicted_answers = []
+
+      # Lista para armazenar as interações
+      interactions = []
+
+      for i, data in bar:
+          # Obter a resposta da LLM com limite de tokens
+          ans_list = self.get_ans(data['text'], model, max_tokens=max_tokens)
+          predicted_answer = ans_list[0]  # Usa a primeira opção como principal previsão
+          true_answer = data['answer']
+
+          # Armazena as respostas para cálculo de métricas
+          true_answers.append(true_answer)
+          predicted_answers.append(predicted_answer)
+
+          # Salva a interação
+          interactions.append({
+              "question": data['text'],
+              "expected_answer": true_answer,
+              "llm_answer_1": ans_list[0],
+              "llm_answer_2": ans_list[1] if len(ans_list) > 1 else "",
+              "llm_answer_3": ans_list[2] if len(ans_list) > 2 else ""
+          })
+
+      # Cálculo das métricas
+      accuracy = accuracy_score(true_answers, predicted_answers)
+      precision = precision_score(true_answers, predicted_answers, average='weighted', zero_division=0)
+      recall = recall_score(true_answers, predicted_answers, average='weighted', zero_division=0)
+      f1 = f1_score(true_answers, predicted_answers, average='weighted', zero_division=0)
+
+      finish_date = datetime.datetime.now()
+
+      # Define os caminhos para salvar os arquivos
+      interaction_dir = "interaction"
+      results_dir = "results"
+
+      # Cria as pastas se elas não existirem
+      os.makedirs(interaction_dir, exist_ok=True)
+      os.makedirs(results_dir, exist_ok=True)
+
+      # Arquivo para interações
+      interaction_file = os.path.join(interaction_dir, file_name.replace(".csv", "_interactions.csv"))
+      with open(interaction_file, mode="w", encoding="utf-8", newline="") as csv_file:
+          writer = csv.DictWriter(csv_file, fieldnames=["question", "expected_answer", "llm_answer_1", "llm_answer_2", "llm_answer_3"])
+          writer.writeheader()
+          writer.writerows(interactions)
+
+      print(f"Interações gravadas em {interaction_file}")
+
+      # Arquivo para resultados
+      results_file = os.path.join(results_dir, file_name)
+      try:
+          df = pd.read_csv(results_file)
+      except FileNotFoundError:
+          df = pd.DataFrame(columns=["modelo", "created_at", "updated_at", "init_date", "finish_date", "accuracy", "precision", "recall", "f1"])
+
+      new_data = pd.DataFrame([{
+          "modelo": model_name,
+          "created_at": init_date,
+          "updated_at": finish_date,
+          "init_date": init_date,
+          "finish_date": finish_date,
+          "accuracy": accuracy,
+          "precision": precision,
+          "recall": recall,
+          "f1": f1
+      }])
+
+      # Verifica se o DataFrame está vazio antes de concatenar
+      if df.empty:
+          df = new_data
+      else:
+          df = pd.concat([df, new_data], ignore_index=True)
+
+      df.to_csv(results_file, index=False)
+      print(f"Resultados gravados em {results_file}")
