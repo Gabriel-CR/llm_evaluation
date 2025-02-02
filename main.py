@@ -23,6 +23,13 @@ def get_args():
         required=True,
         help="Modelos a serem avaliados, no formato 'nome_modelo:tipo_modelo'.",
     )
+    parser.add_argument(
+        "--method",
+        type=str,
+        required=True,
+        choices=["accuracy", "metrics", "apk"],
+        help="Método de avaliação: accuracy, metrics ou apk.",
+    )
     return parser.parse_args()
 
 
@@ -46,20 +53,18 @@ def get_models(models_str):
     return models
 
 
-def evaluate_models(models, eval, ds_path):
+def evaluate_models(models, eval, args):
     """
     Avalia os modelos fornecidos.
     """
     for name, model in models:
         try:
-            print(f"Executando avaliação para o modelo: {name}")
-            current_date = time.strftime("%Y-%m-%d-%H-%M-%S")
-            eval.evaluate_acc(
-                model,
-                name + current_date + f"{ds_path}_eval_new_acc.csv",
-                max_tokens=1,
-                model_name=name,
+            print(
+                f"Executando avaliação para o modelo: {name} com método: {args.method}"
             )
+            current_date = time.strftime("%Y-%m-%d-%H-%M-%S")
+            file_name = f"{name}_{current_date}_{args.ds_path.split('/')[-1].split('.')[0]}_eval_{args.method}.csv"
+            eval.evaluate(model, args.method, file_name, model_name=name, max_tokens=1)
             print("Modelo avaliado com sucesso!")
         except Exception as e:
             print(f"Erro ao avaliar o modelo: {name}")
@@ -82,4 +87,4 @@ if __name__ == "__main__":
     models = get_models(args.models)
 
     # Avalia cada modelo
-    evaluate_models(models, eval, args.ds_path)
+    evaluate_models(models, eval, args)
