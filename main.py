@@ -6,6 +6,7 @@ from langchain_groq import ChatGroq
 from langchain_openai import ChatOpenAI
 from langchain_mistralai import ChatMistralAI
 from langchain_anthropic import ChatAnthropic
+from langchain_deepseek import ChatDeepSeek
 from evaluete import Evaluete
 
 
@@ -27,8 +28,14 @@ def get_args():
         "--method",
         type=str,
         required=True,
-        choices=["accuracy", "metrics", "apk"],
+        choices=["accuracy", "metrics", "apk", "accuracy_with_image"],
         help="Método de avaliação: accuracy, metrics ou apk.",
+    )
+    parser.add_argument(
+        "--max_tokens",
+        type=int,
+        required=True,
+        help="Número máximo de tokens de retorno: 1, 2, 3, ...",
     )
     return parser.parse_args()
 
@@ -48,6 +55,8 @@ def get_models(models_str):
             models.append((name, ChatMistralAI(model=name)))
         elif model_type == "anthropic":
             models.append((name, ChatAnthropic(model=name)))
+        elif model_type == "deepseek":
+            models.append((name, ChatDeepSeek(model=name)))
         else:
             raise ValueError(f"Tipo de modelo não suportado: {model_type}")
     return models
@@ -63,8 +72,9 @@ def evaluate_models(models, eval, args):
                 f"Executando avaliação para o modelo: {name} com método: {args.method}"
             )
             current_date = time.strftime("%Y-%m-%d-%H-%M-%S")
-            file_name = f"{name}_{current_date}_{args.ds_path.split('/')[-1].split('.')[0]}_eval_{args.method}.csv"
-            eval.evaluate(model, args.method, file_name, model_name=name, max_tokens=1)
+            file_name = f"{name}_{current_date}_{args.ds_path}_eval_{args.method}.csv"
+            print(model)
+            eval.evaluate(model=model, method=args.method, file_name=file_name, model_name=name, max_tokens=args.max_tokens)
             print("Modelo avaliado com sucesso!")
         except Exception as e:
             print(f"Erro ao avaliar o modelo: {name}")
@@ -78,10 +88,10 @@ if __name__ == "__main__":
 
     # Obtém os argumentos da linha de comando
     args = get_args()
-    print(args)
 
     # Inicializa o avaliador com o ds_path fornecido
-    eval = Evaluete(args.ds_path)
+    data_dir = os.getenv("DATA_PATH")
+    eval = Evaluete(f"{data_dir}/{args.ds_path}")
 
     # Obtém a lista de modelos
     models = get_models(args.models)

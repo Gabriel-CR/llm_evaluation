@@ -1,0 +1,2 @@
+modelo,created_at,updated_at,init_date,finish_date,accuracy,precision,recall,f1
+deepseek-r1-distill-qwen-32b,2025-03-02 19:27:09.867876,2025-03-02 19:36:45.236858,2025-03-02 19:27:09.867876,2025-03-02 19:36:45.236858,0.0,0.0,0.0,0.0

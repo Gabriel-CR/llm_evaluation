@@ -1,0 +1,54 @@
+question,expected_answer,llm_answer
+"Answer the following multiple choice question by giving the most appropriate response. Answer should be one among [A, B, C, D, E]. Add the correct alternative at the beginning of the answer and enclose it in braces. Example: {A}
+
+
+        Question: ### TEXTO 1
+#### Capítulo 4, versículo 3
+Racionais MCs
+Minha palavra vale um tiro, eu tenho muita munição 
+Na queda ou na ascensão, minha atitude vai além
+E tem disposição pro mal e pro bem
+Talvez eu seja um sádico ou um anjo, um mágico
+Ou juiz, ou réu, o bandido do céu
+Malandro ou otário, quase sanguinário
+Franco atirador se for necessário
+Revolucionário, insano, ou marginal
+Antigo e moderno, imortal
+Fronteira do céu com o inferno
+Astral imprevisível, como um ataque cardíaco do verso.
+### TEXTO 2
+#### Ouvindo Racionais MCs
+Pode-se dizer que as várias experiências narradas nos discos do Racionais tratam no fundo de um só tema: a violência que estrutura a nossa sociedade. O grupo canta a violência que estrutura as relações entre os familiares, os amigos, o homem e a mulher, o traficante e o viciado. Canta a violência do crime. A violência causada por inveja ou por vaidade. Também canta que a relação entre as classes sociais é sempre violenta: o racismo, a miséria, os baixos salários, a concentração de renda, a esmola, a publicidade, o alcoolismo, o jornalismo, o poder policial, a justiça, o sistema penitenciário, o governo existem por meio da violência.
+Na letra da canção, a tematização da violência mencionada no Texto 2 manifesta-se
+
+        A) como metáfora da desigualdade, que associa a ideia de justiça a valores históricos negativos.
+
+        B) na referência a termos bélicos, que sinaliza uma crítica social à opressão da população das periferias.
+
+        C) como procedimento metalinguístico, que concebe a palavra como uma forma de combate e insubordinação.
+
+        D) nas definições ambíguas do enunciador, que inverte e relativiza as representações da maldade e da bondade.
+
+        E) na menção à imortalidade, que sugere a possibilidade de resistência para além da dicotomia entre vida e morte.
+
+
+        Answer:",C,A
+"Answer the following multiple choice question by giving the most appropriate response. Answer should be one among [A, B, C, D, E]. Add the correct alternative at the beginning of the answer and enclose it in braces. Example: {A}
+
+
+        Question: [[placeholder]]
+VISCONTI, E. Três meninas no jardim. Óleo sobre tela, 81 ⋅ 65 cm. Museu Nacional de Belas Artes, Rio de Janeiro, 1935.
+Eliseu D’Angelo Visconti (1866-1944) desenvolveu diversas obras no Brasil, com grande influência das escolas europeias. Em sua pintura Três meninas no jardim, há
+
+        A) culto à fluidez e ao progresso, nos moldes do ideário futurista.
+
+        B) valorização de formas decompostas, a exemplo do estilo cubista.
+
+        C) efeitos fugazes de luz e movimento, que remetem à estética impressionista.
+
+        D) expressão do sonho e do inconsciente, que dialoga com a proposta surrealista.
+
+        E) tematização de elementos cotidianos, que resgata modelos de representação da arte realista.
+
+
+        Answer:",C,A

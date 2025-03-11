@@ -1,6 +1,4 @@
 .env
-enem.py
-grock.py
-results/
-interaction/
-data/
+_results/
+_interaction/
+_data/
